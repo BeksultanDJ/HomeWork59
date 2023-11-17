@@ -1,13 +1,12 @@
-import './App.css'
+import MovieList from './components/MovieList';
 
-function App() {
+const App = () => {
+    return (
+        <div>
+            <h1>Movie Tracker</h1>
+            <MovieList />
+        </div>
+    );
+};
 
-
-  return (
-    <>
-
-    </>
-  )
-}
-
-export default App
+export default App;
