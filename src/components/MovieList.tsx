@@ -30,6 +30,13 @@ const MovieList: React.FC = () => {
         setMovies(updatedMovies);
     };
 
+    const editMovie = (id: number, editedTitle: string) => {
+        const updatedMovies = movies.map(movie =>
+            movie.id === id ? { ...movie, title: editedTitle } : movie
+        );
+        setMovies(updatedMovies);
+    };
+
     return (
         <div>
             <input
@@ -39,16 +46,17 @@ const MovieList: React.FC = () => {
                 onChange={(e) => setNewMovie(e.target.value)}
             />
             <button onClick={addMovie}>Add</button>
-            <ul>
+
                 <h5>To watch list</h5>
                 {movies.map((movie) => (
                     <MovieItem
                         key={movie.id}
                         movie={movie}
+                        editMovie={editMovie}
                         deleteMovie={deleteMovie}
                     />
                 ))}
-            </ul>
+
         </div>
     );
 };
