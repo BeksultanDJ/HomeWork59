@@ -58,7 +58,7 @@ const MovieList: React.FC = () => {
             />
             <button onClick={addMovie}>Add</button>
 
-            <h5>To watch list</h5>
+            <h5>To watch list:</h5>
             {movies.map((movie) => (
                 <MovieItem
                     key={movie.id}
