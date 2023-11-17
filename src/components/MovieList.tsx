@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MovieItem from './MovieItem';
 
 interface Movie {
@@ -10,7 +10,16 @@ const MovieList: React.FC = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [newMovie, setNewMovie] = useState<string>('');
 
+    useEffect(() => {
+        const storedMovies = localStorage.getItem('movieList');
+        if (storedMovies) {
+            setMovies(JSON.parse(storedMovies));
+        }
+    }, []);
 
+    const updateLocalStorage = (updatedMovies: Movie[]) => {
+        localStorage.setItem('movieList', JSON.stringify(updatedMovies));
+    };
 
     const addMovie = () => {
         if (newMovie.trim() !== '') {
@@ -18,16 +27,17 @@ const MovieList: React.FC = () => {
                 id: Math.floor(Math.random() * 1000),
                 title: newMovie.trim(),
             };
-            setMovies([...movies, newMovieItem]);
+            const updatedMovies = [...movies, newMovieItem];
+            setMovies(updatedMovies);
             setNewMovie('');
+            updateLocalStorage(updatedMovies);
         }
     };
-
-
 
     const deleteMovie = (id: number) => {
         const updatedMovies = movies.filter(movie => movie.id !== id);
         setMovies(updatedMovies);
+        updateLocalStorage(updatedMovies);
     };
 
     const editMovie = (id: number, editedTitle: string) => {
@@ -35,6 +45,7 @@ const MovieList: React.FC = () => {
             movie.id === id ? { ...movie, title: editedTitle } : movie
         );
         setMovies(updatedMovies);
+        updateLocalStorage(updatedMovies);
     };
 
     return (
@@ -47,16 +58,15 @@ const MovieList: React.FC = () => {
             />
             <button onClick={addMovie}>Add</button>
 
-                <h5>To watch list</h5>
-                {movies.map((movie) => (
-                    <MovieItem
-                        key={movie.id}
-                        movie={movie}
-                        editMovie={editMovie}
-                        deleteMovie={deleteMovie}
-                    />
-                ))}
-
+            <h5>To watch list</h5>
+            {movies.map((movie) => (
+                <MovieItem
+                    key={movie.id}
+                    movie={movie}
+                    editMovie={editMovie}
+                    deleteMovie={deleteMovie}
+                />
+            ))}
         </div>
     );
 };
